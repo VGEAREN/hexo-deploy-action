@@ -27,6 +27,12 @@ then
   exit 1
 fi
 
+if [ -z "$HEXO_ALGOLIA_INDEXING_KEY" ]
+then
+  echo "You must provide the action with a HEXO_ALGOLIA_INDEXING_KEY."
+  exit 1
+fi
+
 REPOSITORY_PATH="https://x-access-token:${PERSONAL_TOKEN}@github.com/${PRO_REPOSITORY}.git"
 
 # deploy to 
@@ -48,6 +54,10 @@ echo "Clean folder ..."
 
 echo "Generate file ..."
 ./node_modules/hexo/bin/hexo generate 
+
+echo "Update record to algolia"
+export HEXO_ALGOLIA_INDEXING_KEY=${HEXO_ALGOLIA_INDEXING_KEY}
+./node_modules/hexo/bin/hexo algolia 
 
 cd $PUBLISH_DIR
 
